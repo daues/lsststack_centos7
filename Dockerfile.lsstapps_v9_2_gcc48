@@ -1,0 +1,31 @@
+
+FROM centos:centos7
+MAINTAINER Greg Daues
+
+RUN yum -y groupinstall Base   && \
+  yum -y install gcc.x86_64      && \
+  yum -y install  gcc-c++.x86_64   && \
+  yum -y install perl-ExtUtils-MakeMaker   && \
+  yum -y install  gettext.x86_64    && \
+  yum -y install flex.x86_64      && \
+  yum -y install bison.x86_64     && \
+  yum -y install zlib-devel.x86_64   && \
+  yum -y install bzip2-devel.x86_64  && \
+  yum -y install ncurses-devel.x86_64  && \
+  yum -y install libXt-devel.x86_64   && \
+  yum -y install  patch.x86_64   && \
+  yum -y install openssl.x86_64 && \
+  yum -y install openssl-devel.x86_64  && \
+  cd /usr/local && \
+  mkdir lsst && \
+  mkdir lsst/lsst_home && \
+  cd  lsst/lsst_home && \
+  curl -O https://sw.lsstcorp.org/eupspkg/newinstall.sh
+
+RUN  cd /usr/local/lsst/lsst_home && \
+  echo yes > /tmp/input1 && \
+  echo yes >> /tmp/input1 && \
+  /bin/bash newinstall.sh < /tmp/input1  && \
+  /bin/bash -c 'source "/usr/local/lsst/lsst_home/loadLSST.bash"; eups list; export EUPSPKG_NJOBS=1; eups distrib install -t v9_2 lsst_apps; eups list'
+
+
